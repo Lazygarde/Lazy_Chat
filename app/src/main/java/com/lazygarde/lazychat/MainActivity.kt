@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private val json: MediaType = "application/json; charset=utf-8".toMediaType()
-    val client = OkHttpClient()
+    private val client = OkHttpClient()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         init()
@@ -82,16 +82,18 @@ class MainActivity : AppCompatActivity() {
         jsonBody.put("max_tokens", 4000)
         jsonBody.put("temperature", 0)
 
-
         val body = RequestBody.create(json, jsonBody.toString())
         val request = Request.Builder()
             .url("https://api.openai.com/v1/chat/completions")
-            .header("Authorization", "Bearer YOUR_API_KEY")
+            .header(
+                "Authorization",
+                "Bearer YOUR_API_KEY"
+            ) // You must have your own API key and replace it here
             .post(body)
             .build()
         client.newCall(request).enqueue(object : okhttp3.Callback {
             override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
-                addResponse("Failed to connect to server " + e.message )
+                addResponse("1. Failed to connect to server " + e.message)
             }
 
             @Throws(java.io.IOException::class)
@@ -99,10 +101,11 @@ class MainActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val jsonObject = JSONObject(response.body!!.string())
                     val jsonArray = jsonObject.getJSONArray("choices")
-                    val result = jsonArray.getJSONObject(0).getJSONObject("message").getString("content")
+                    val result =
+                        jsonArray.getJSONObject(0).getJSONObject("message").getString("content")
                     addResponse(result)
                 } else {
-                    addResponse("Failed to connect to server " +response.body!!.string())
+                    addResponse("2. Failed to connect to server " + response.body!!.string())
                 }
             }
         })
