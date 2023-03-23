@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Lazy Chat</string>
+    <string name="writeHere">Write here</string>
+    <string name="welcomeText">Welcome to Easy chatGPT\nTry it out now</string>
+</resources>
